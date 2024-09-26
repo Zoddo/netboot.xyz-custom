@@ -3,10 +3,21 @@
 ### netboot.xyz-custom menu
 ###
 
-:start
-echo Hello world!
-sleep 10
+:custom
+clear custom_choice
+menu Zoddo iPXE menu
+item --gap Tools
+item latest_ipxe ${space} Reload iPXE with the latest binary from netboot.xyz
+choose custom_choice || goto custom_exit
+echo ${cls}
+goto ${custom_choice}
 goto custom_exit
 
+:latest_ipxe
+sanboot https://boot.netboot.xyz/ipxe/netboot.xyz.iso || echo HTTPS failed... attempting HTTP...
+sanboot http://boot.netboot.xyz/ipxe/netboot.xyz.iso || echo HTTP failed
+goto custom
+
 :custom_exit
-exit 0
+chain utils.ipxe
+exit
